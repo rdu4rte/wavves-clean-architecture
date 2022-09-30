@@ -1,0 +1,97 @@
+version: "3"
+vars:
+  LOCAL_SERVICES: "app mongodb"
+  COMPOSE_FILE: "COMPOSE_FILE=docker-compose.yml"
+  BUILD_CMD: "docker-compose build --no-cache"
+  RUN_CMD: "docker-compose up -d {{.LOCAL_SERVICES}}"
+  RUN_APP_CMD: "docker-compose up -d app"
+  STOP_CMD: "docker-compose down -v"
+  TEST_CMD: "docker-compose exec -T app yarn test"
+  TEST_COVERAGE_CMD: "docker-compose exec -T app yarn test:cov"
+  COPY_COVERAGE_CMD: "docker-compose cp app:/app/coverage ."
+  BASH_CMD: "docker exec -it app-$PROJECT_NAME bash"
+  INSTALL_DEPENDENCIES_CMD: "docker-compose run app yarn install --ignore-scripts"
+  LOGS_CMD: "docker-compose logs -f --tail=500"
+  LOGS_APP_CMD: "docker-compose logs -f --tail=500 app"
+
+tasks:
+  default:
+    cmds:
+      - task: run
+
+  run: 
+    desc: Execute local project
+    cmds:
+      - task: build
+      - '{{.RUN_CMD}}'
+
+  build:
+    desc: Build containers
+    cmds:
+      - '{{.BUILD_CMD}}'
+
+  install:
+    desc: Install dependencies
+    cmds:
+      - task: stop
+      - task: build
+      - '{{.INSTALL_DEPENDENCIES_CMD}}'
+
+  stop:
+    desc: Stop containers
+    cmds:
+      - '{{.STOP_CMD}}'
+
+  restart:
+    desc: Recreate containers
+    cmds:
+      - task: stop
+      - task: run
+
+  test:
+    desc: Execute tests
+    cmds:
+      - task: stop
+      - task: run
+      - '{{.TEST_CMD}}'
+
+  test:ci:
+    desc: Execute tests for CI
+    cmds:
+      - '{{.COMPOSE_FILE}} {{.STOP_CMD}}'
+      - '{{.COMPOSE_FILE}} {{.BUILD_CMD}}'
+      - '{{.COMPOSE_FILE}} {{.RUN_CMD}}'
+      - '{{.COMPOSE_FILE}} {{.TEST_COVERAGE_CMD}}'
+
+  test:copy_coverage:
+    desc: Copy coverage folder outside container
+    cmds:
+      - '{{.COMPOSE_FILE}} {{.COPY_COVERAGE_CMD}}'
+  
+  test:destroy:
+    desc: Destroy containers
+    cmds:
+      - '{{.COMPOSE_FILE}} {{.STOP_CMD}}'
+      
+  coverage:
+    desc: Execute tests coverage
+    cmds:
+      - task: stop
+      - task: run
+      - '{{.TEST_COVERAGE_CMD}}'
+      - task: stop
+
+  app:
+    desc: Enter app bash
+    cmds:
+      - '{{.BASH_CMD}}'  
+
+  logs:
+    desc: Docker logs
+    cmds:
+      - '{{.LOGS_CMD}}'   
+
+  logs:app:
+    desc: Docker app logs
+    cmds:
+      - '{{.LOGS_APP_CMD}}'  

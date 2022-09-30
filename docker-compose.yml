@@ -1,0 +1,31 @@
+version: '3.5'
+services:
+  app:
+    hostname: 'app-${PROJECT_NAME}'
+    container_name: 'app-${PROJECT_NAME}'
+    build:
+      dockerfile: Dockerfile.test
+      context: .
+    networks:
+      - local_dev_network
+    depends_on:
+      - mongodb
+    env_file:
+      - .env
+    environment:
+      MONGODB_DB_NAME: wavvesdb
+      MONGODB_HOST: mongodb:27017
+      MONGODB_PASSWORD: test
+      MONGODB_USER: test
+  mongodb:
+    hostname: 'mongodb-${PROJECT_NAME}'
+    container_name: 'mongodb-${PROJECT_NAME}'
+    image: 'mongo:4.2.3'
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: test
+      MONGO_INITDB_ROOT_PASSWORD: test
+    networks:
+      - local_dev_network
+networks:
+  local_dev_network:
+    driver: bridge

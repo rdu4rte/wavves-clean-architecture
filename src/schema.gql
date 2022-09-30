@@ -1,0 +1,49 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type BookDto {
+  _id: ObjectId!
+  author: String!
+  category: Category!
+  created_at: DateTime!
+  name: String!
+  pages: Int!
+  publicationDate: String!
+  publisher: String!
+  unitValue: Float!
+}
+
+"""Book category type definition"""
+enum Category {
+  biografias
+  colecoes
+  comportamento
+  contos
+  critica_literaria
+  ficcao_cientifica
+  folclore
+  genealogia
+  humor
+  infanto_juvenis
+  jogos
+  jornais
+  literatura_brasileira
+  literatura_estrangeira
+  livros_raros
+  manuscritos
+  outros
+  poesia
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+"""Mongo Object Id scalar type"""
+scalar ObjectId
+
+type Query {
+  books: [BookDto!]!
+}
