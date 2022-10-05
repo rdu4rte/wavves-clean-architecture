@@ -1,7 +1,10 @@
 import { Module } from '@nestjs/common'
 import { GraphQLModule } from '@nestjs/graphql'
 import { join } from 'path'
-import { dbConnectorDirective } from './infra/config/graphql/directives'
+import {
+  authSessionDirective,
+  dbConnectorDirective
+} from './infra/config/graphql/directives'
 import { ObjectIdScalar } from './infra/config/graphql/scalars'
 import { RepositoriesModule } from './infra/repositories'
 import { ResolversModule } from './infra/resolvers'
@@ -16,7 +19,8 @@ import { UsecasesProxyModule } from './infra/usecases-proxy'
       autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
       resolvers: { ObjectId: ObjectIdScalar },
       schemaDirectives: {
-        dbConn: dbConnectorDirective
+        dbConn: dbConnectorDirective,
+        authSession: authSessionDirective
       }
     }),
     ResolversModule,

@@ -12,7 +12,12 @@ export interface IDefaultRepository {
     dbConn: Db,
     collection?: string
   ): Promise<number>
-  getById<T>(id: string, dbConn: Db, collection?: string): Promise<T>
+  getById<T>(
+    id: string,
+    dbConn: Db,
+    collection?: string,
+    field?: string
+  ): Promise<T>
   insertOne<T>(document: T, dbConn: Db, collection?: string): Promise<T>
   updateOne(
     id: string,

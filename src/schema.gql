@@ -47,3 +47,26 @@ scalar ObjectId
 type Query {
   books: [BookDto!]!
 }
+
+"""Role type definitions"""
+enum Role {
+  admin
+  manager
+  user
+}
+
+type UserDto {
+  _id: ObjectId!
+  active: Boolean!
+  created_at: DateTime!
+  email: String!
+  password: String!
+  role: Role!
+  updated_at: DateTime!
+  username: String!
+}
+
+type UserSessionDto {
+  _id: ObjectId!
+  role: Role!
+}

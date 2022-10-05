@@ -13,6 +13,7 @@ export class BookResolver {
   ) {}
 
   @Query(() => [BookDto])
+  @Directive('@authSession(roles: ["admin"])')
   @Directive('@dbConn')
   async books(@Context() { dbConn }: HttpCtx): Promise<BookDto[]> {
     return this.getBooksProxy.getInstance().perform(dbConn)

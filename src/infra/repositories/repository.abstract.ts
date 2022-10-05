@@ -2,6 +2,7 @@ import { IDefaultRepository } from '@/domain/repositories'
 import {
   Db,
   DeleteWriteOpResultObject,
+  ObjectID,
   ObjectId,
   UpdateWriteOpResult
 } from 'mongodb'
@@ -42,10 +43,15 @@ export class AbstractRepository implements IDefaultRepository {
       .countDocuments(query)
   }
 
-  async getById<T>(id: string, dbConn: Db, collection?: string): Promise<T> {
-    return await dbConn
-      .collection(collection || this.repositoryName)
-      .findOne({ _id: new ObjectId(id) })
+  async getById<T>(
+    id: string,
+    dbConn: Db,
+    collection?: string,
+    field?: string
+  ): Promise<T> {
+    return await dbConn.collection(collection || this.repositoryName).findOne({
+      [field || '_id']: ObjectID.isValid(id) ? new ObjectId(id) : id
+    })
   }
 
   async insertOne<T>(document: T, dbConn: Db, collection?: string): Promise<T> {
