@@ -35,7 +35,6 @@ export class authSessionDirective extends SchemaDirectiveVisitor {
       if (roles && !roles.includes(session?.user?.role))
         throw new UnauthorizedException('Role not authorized')
 
-      console.log(sessionId)
       return await resolve.apply(this, args)
     }
   }
