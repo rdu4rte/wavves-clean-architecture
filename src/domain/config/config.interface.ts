@@ -7,4 +7,9 @@ export interface Config {
     password: string
     database: string
   }
+  jwt: {
+    secret: string
+    sessionTtl: number
+    salt: number
+  }
 }

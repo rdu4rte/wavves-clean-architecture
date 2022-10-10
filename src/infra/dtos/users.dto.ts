@@ -32,6 +32,10 @@ registerEnumType(Role, {
 
 @ObjectType()
 export class UserDto {
+  constructor(init?: Partial<UserDto>) {
+    Object.assign(this, init)
+  }
+
   @Field(() => ObjectIdScalar)
   _id: ObjectId
 
@@ -78,6 +82,34 @@ export class UserInput {
   @IsString()
   @MinLength(6)
   password: string
+
+  @Field(() => Role, { nullable: true })
+  @IsOptional()
+  @IsEnum(Role)
+  role?: Role
+}
+
+@InputType()
+export class UserUpdate {
+  @Field(() => String)
+  @IsOptional()
+  @IsLowercase()
+  @MaxLength(20)
+  @IsString()
+  username?: string
+
+  @Field(() => String)
+  @IsOptional()
+  @IsEmail()
+  @IsLowercase()
+  @IsString()
+  email?: string
+
+  @Field(() => String)
+  @IsOptional()
+  @IsString()
+  @MinLength(6)
+  password?: string
 
   @Field(() => Role, { nullable: true })
   @IsOptional()

@@ -14,5 +14,10 @@ export const config: Config = {
     user: env('MONGODB_USER') || 'test',
     password: env('MONGODB_PASSWORD') || 'test',
     database: env('MONGODB_DATABASE') || 'wavvesdb'
+  },
+  jwt: {
+    secret: env('JWT_SECRET') || 's3cr3t',
+    sessionTtl: +env('JWT_SESSION_TTL') || 12 * 60 * 60,
+    salt: +env('JWT_ENCRYPTION_SALT') || 12
   }
 }

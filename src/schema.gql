@@ -41,11 +41,31 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
+type DefaultResponse {
+  message: String!
+  success: Boolean!
+}
+
+type Mutation {
+  insertUser(input: UserInput!): DefaultResponse!
+  updateUserPassword(password: String!, user_id: String!): DefaultResponse!
+}
+
 """Mongo Object Id scalar type"""
 scalar ObjectId
 
+input PaginationParams {
+  page: Int
+  pageSize: Int
+  search: String
+  sort: [String!]
+  sortDirection: [SortDirection!]
+}
+
 type Query {
   books: [BookDto!]!
+  user(user_id: String!): UserDto!
+  users(filters: UserFiltersInput!, pagination: PaginationParams!): UserDataOutput!
 }
 
 """Role type definitions"""
@@ -53,6 +73,17 @@ enum Role {
   admin
   manager
   user
+}
+
+"""Sort direction definition"""
+enum SortDirection {
+  ASC
+  DESC
+}
+
+type UserDataOutput {
+  count: Int!
+  data: [UserDto!]!
 }
 
 type UserDto {
@@ -63,6 +94,18 @@ type UserDto {
   password: String!
   role: Role!
   updated_at: DateTime!
+  username: String!
+}
+
+input UserFiltersInput {
+  active: Boolean
+  role: Role
+}
+
+input UserInput {
+  email: String!
+  password: String!
+  role: Role
   username: String!
 }
 
