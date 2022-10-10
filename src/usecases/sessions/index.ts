@@ -1,1 +1,5 @@
 export * from './checkSessionIntegrity.usecase'
+export * from './getSession.usecase'
+export * from './getSessions.usecase'
+export * from './inactivateSessions.usecase'
+export * from './login.usecase'

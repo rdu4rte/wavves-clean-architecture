@@ -2,6 +2,7 @@ import { HttpCtx } from '@/domain/graphql'
 import {
   GetUserById,
   GetUsers,
+  InactivateUser,
   InsertUser,
   UpdateUserPassword
 } from '@/usecases/users'
@@ -33,7 +34,9 @@ export class UserResolver {
     @Inject(UsecasesProxyModule.INSERT_USER)
     private readonly insertUserProxy: UseCaseProxy<InsertUser>,
     @Inject(UsecasesProxyModule.UPDATE_USER_PASSWORD)
-    private readonly updateUserPasswordProxy: UseCaseProxy<UpdateUserPassword>
+    private readonly updateUserPasswordProxy: UseCaseProxy<UpdateUserPassword>,
+    @Inject(UsecasesProxyModule.INACTIVATE_USER)
+    private readonly inactivateUserProxy: UseCaseProxy<InactivateUser>
   ) {}
 
   @Query(() => UserDataOutput)
@@ -77,5 +80,15 @@ export class UserResolver {
     return this.updateUserPasswordProxy
       .getInstance()
       .perform(userId, password, dbConn)
+  }
+
+  @Mutation(() => DefaultResponse)
+  @Directive('@authSession')
+  @Directive('@dbConn')
+  async inactivateUser(
+    @Args('user_id') userId: string,
+    @Context() { dbConn }: HttpCtx
+  ): Promise<DefaultResponse> {
+    return this.inactivateUserProxy.getInstance().perform(userId, dbConn)
   }
 }

@@ -15,6 +15,10 @@ export class UserSessionDto {
 
 @ObjectType()
 export class SessionDto {
+  constructor(init?: Partial<SessionDto>) {
+    Object.assign(this, init)
+  }
+
   @Field(() => ObjectIdScalar)
   _id: ObjectId
 
@@ -56,4 +60,19 @@ export class CredentialsDto {
   @IsString()
   @MinLength(6)
   password: string
+}
+
+@ObjectType()
+export class JwtCredentials {
+  @Field(() => String)
+  token: string
+
+  @Field(() => Date)
+  expiresIn: Date
+}
+
+@ObjectType()
+export class SessionResponse {
+  @Field(() => String)
+  session_id: string
 }

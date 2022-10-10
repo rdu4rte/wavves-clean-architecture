@@ -1,14 +1,25 @@
 import { GetBooks } from '@/usecases/books'
+import { Login } from '@/usecases/sessions'
 import {
   GetUserById,
   GetUsers,
+  InactivateUser,
   InsertUser,
   UpdateUserPassword
 } from '@/usecases/users'
 import { DynamicModule, Module } from '@nestjs/common'
-import { EncrypterHelper, MongoDbHelper } from '../helpers'
+import {
+  EncrypterHelper,
+  JwtHelper,
+  MongoDbHelper,
+  UuidHelper
+} from '../helpers'
 import { LoggerService } from '../logger'
-import { BookRepository, UserRepository } from '../repositories'
+import {
+  BookRepository,
+  SessionRepository,
+  UserRepository
+} from '../repositories'
 import { UseCaseProxy } from './usecases-proxy'
 
 @Module({
@@ -16,8 +27,11 @@ import { UseCaseProxy } from './usecases-proxy'
     LoggerService,
     MongoDbHelper,
     EncrypterHelper,
+    JwtHelper,
+    UuidHelper,
     BookRepository,
-    UserRepository
+    UserRepository,
+    SessionRepository
   ]
 })
 export class UsecasesProxyModule {
@@ -27,6 +41,9 @@ export class UsecasesProxyModule {
   static GET_USER_BY_ID = 'GetUserById'
   static INSERT_USER = 'InsertUser'
   static UPDATE_USER_PASSWORD = 'UpdateUserPassword'
+  static INACTIVATE_USER = 'InactivateUser'
+
+  static LOGIN_USER = 'Login'
 
   static register(): DynamicModule {
     return {
@@ -71,15 +88,67 @@ export class UsecasesProxyModule {
             )
         },
         {
-          inject: [LoggerService, UserRepository, EncrypterHelper],
+          inject: [
+            LoggerService,
+            UserRepository,
+            EncrypterHelper,
+            MongoDbHelper
+          ],
           provide: UsecasesProxyModule.UPDATE_USER_PASSWORD,
           useFactory: (
             logger: LoggerService,
             usersRepository: UserRepository,
-            encrypterHelper: EncrypterHelper
+            encrypterHelper: EncrypterHelper,
+            mongoDbHelper: MongoDbHelper
           ) =>
             new UseCaseProxy(
-              new UpdateUserPassword(logger, usersRepository, encrypterHelper)
+              new UpdateUserPassword(
+                logger,
+                usersRepository,
+                encrypterHelper,
+                mongoDbHelper
+              )
+            )
+        },
+        {
+          inject: [LoggerService, UserRepository, MongoDbHelper],
+          provide: UsecasesProxyModule.INACTIVATE_USER,
+          useFactory: (
+            logger: LoggerService,
+            usersRepository: UserRepository,
+            mongoDbHelper: MongoDbHelper
+          ) =>
+            new UseCaseProxy(
+              new InactivateUser(logger, usersRepository, mongoDbHelper)
+            )
+        },
+        {
+          inject: [
+            LoggerService,
+            SessionRepository,
+            UserRepository,
+            EncrypterHelper,
+            JwtHelper,
+            UuidHelper
+          ],
+          provide: UsecasesProxyModule.LOGIN_USER,
+          useFactory: (
+            logger: LoggerService,
+            sessionRepository: SessionRepository,
+            userRepository: UserRepository,
+            encrypterHelper: EncrypterHelper,
+            jwtHelper: JwtHelper,
+            uuidHelper: UuidHelper
+          ) =>
+            new UseCaseProxy(
+              new Login(
+                logger,
+                sessionRepository,
+                userRepository,
+                encrypterHelper,
+                jwtHelper,
+                uuidHelper
+              )
             )
         }
       ],
@@ -88,7 +157,9 @@ export class UsecasesProxyModule {
         UsecasesProxyModule.GET_USERS,
         UsecasesProxyModule.GET_USER_BY_ID,
         UsecasesProxyModule.INSERT_USER,
-        UsecasesProxyModule.UPDATE_USER_PASSWORD
+        UsecasesProxyModule.UPDATE_USER_PASSWORD,
+        UsecasesProxyModule.INACTIVATE_USER,
+        UsecasesProxyModule.LOGIN_USER
       ]
     }
   }
