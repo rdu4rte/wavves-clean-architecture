@@ -1,5 +1,10 @@
 import { GetBooks } from '@/usecases/books'
-import { Login } from '@/usecases/sessions'
+import {
+  Login,
+  GetSession,
+  GetSessions,
+  InactivateSessions
+} from '@/usecases/sessions'
 import {
   GetUserById,
   GetUsers,
@@ -44,6 +49,9 @@ export class UsecasesProxyModule {
   static INACTIVATE_USER = 'InactivateUser'
 
   static LOGIN_USER = 'Login'
+  static GET_SESSION = 'GetSession'
+  static GET_SESSIONS_LIST = 'GetSessions'
+  static INACTIVATE_SESSIONS = 'InactivateSessions'
 
   static register(): DynamicModule {
     return {
@@ -150,6 +158,38 @@ export class UsecasesProxyModule {
                 uuidHelper
               )
             )
+        },
+        {
+          inject: [LoggerService, SessionRepository],
+          provide: UsecasesProxyModule.GET_SESSION,
+          useFactory: (
+            logger: LoggerService,
+            sessionRepository: SessionRepository
+          ) => new UseCaseProxy(new GetSession(logger, sessionRepository))
+        },
+        {
+          inject: [LoggerService, SessionRepository, MongoDbHelper],
+          provide: UsecasesProxyModule.GET_SESSIONS_LIST,
+          useFactory: (
+            logger: LoggerService,
+            sessionRepository: SessionRepository,
+            mongoDbHelper: MongoDbHelper
+          ) =>
+            new UseCaseProxy(
+              new GetSessions(logger, sessionRepository, mongoDbHelper)
+            )
+        },
+        {
+          inject: [LoggerService, SessionRepository, MongoDbHelper],
+          provide: UsecasesProxyModule.INACTIVATE_SESSIONS,
+          useFactory: (
+            logger: LoggerService,
+            sessionRepository: SessionRepository,
+            mongoDbHelper: MongoDbHelper
+          ) =>
+            new UseCaseProxy(
+              new InactivateSessions(logger, sessionRepository, mongoDbHelper)
+            )
         }
       ],
       exports: [
@@ -159,7 +199,10 @@ export class UsecasesProxyModule {
         UsecasesProxyModule.INSERT_USER,
         UsecasesProxyModule.UPDATE_USER_PASSWORD,
         UsecasesProxyModule.INACTIVATE_USER,
-        UsecasesProxyModule.LOGIN_USER
+        UsecasesProxyModule.LOGIN_USER,
+        UsecasesProxyModule.GET_SESSION,
+        UsecasesProxyModule.GET_SESSIONS_LIST,
+        UsecasesProxyModule.INACTIVATE_SESSIONS
       ]
     }
   }

@@ -1,4 +1,4 @@
-import { Field, InputType, ObjectType } from '@nestjs/graphql'
+import { Field, InputType, Int, ObjectType } from '@nestjs/graphql'
 import { IsEmail, IsNotEmpty, IsString, MinLength } from 'class-validator'
 import { ObjectId } from 'mongodb'
 import { ObjectIdScalar } from '../config/graphql/scalars'
@@ -75,4 +75,13 @@ export class JwtCredentials {
 export class SessionResponse {
   @Field(() => String)
   session_id: string
+}
+
+@ObjectType()
+export class SessionsDataOutput {
+  @Field(() => [SessionDto])
+  data: SessionDto[]
+
+  @Field(() => Int)
+  count: number
 }

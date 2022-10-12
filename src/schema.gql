@@ -52,6 +52,7 @@ type DefaultResponse {
 }
 
 type Mutation {
+  inactivateSessions(user_id: String!): DefaultResponse!
   inactivateUser(user_id: String!): DefaultResponse!
   insertUser(input: UserInput!): DefaultResponse!
   login(credentials: CredentialsDto!): SessionResponse!
@@ -71,6 +72,8 @@ input PaginationParams {
 
 type Query {
   books: [BookDto!]!
+  session(session_id: String!): SessionDto!
+  sessions(pagination: PaginationParams!): SessionsDataOutput!
   user(user_id: String!): UserDto!
   users(filters: UserFiltersInput!, pagination: PaginationParams!): UserDataOutput!
 }
@@ -82,8 +85,23 @@ enum Role {
   user
 }
 
+type SessionDto {
+  _id: ObjectId!
+  active: Boolean!
+  created_at: DateTime!
+  expires_at: DateTime!
+  session_id: String!
+  token: String!
+  user: UserSessionDto!
+}
+
 type SessionResponse {
   session_id: String!
+}
+
+type SessionsDataOutput {
+  count: Int!
+  data: [SessionDto!]!
 }
 
 """Sort direction definition"""

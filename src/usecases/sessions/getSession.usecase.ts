@@ -1,6 +1,11 @@
+import { SessionDto } from '@/infra/dtos'
 import { LoggerService } from '@/infra/logger'
 import { SessionRepository } from '@/infra/repositories'
-import { Inject, InternalServerErrorException } from '@nestjs/common'
+import {
+  Inject,
+  InternalServerErrorException,
+  NotFoundException
+} from '@nestjs/common'
 import { Db } from 'mongodb'
 
 export class GetSession {
@@ -10,9 +15,18 @@ export class GetSession {
     private readonly sessionRepository: SessionRepository
   ) {}
 
-  async perform(dbConn: Db): Promise<any> {
+  async perform(sessionId: string, dbConn: Db): Promise<SessionDto> {
     try {
-      return {}
+      const session = await this.sessionRepository.getById<SessionDto>(
+        sessionId,
+        dbConn,
+        null,
+        'session_id'
+      )
+
+      if (!session) throw new NotFoundException('Session not found')
+
+      return session
     } catch (err) {
       this.logger.error(
         'GetSessionErr',

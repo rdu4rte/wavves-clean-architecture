@@ -59,7 +59,10 @@ export class Login {
         await this.sessionRepository.insertOne<SessionDto>(session, dbConn)
       ])
 
-      this.logger.log('Login', `Inactivate past sessions - res: ${inactivate}`)
+      this.logger.log(
+        'Login',
+        `Inactivate past sessions - res: ${inactivate.result.ok ? 'ok' : 'nok'}`
+      )
 
       return {
         session_id: newSession.session_id

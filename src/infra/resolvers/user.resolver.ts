@@ -83,7 +83,7 @@ export class UserResolver {
   }
 
   @Mutation(() => DefaultResponse)
-  @Directive('@authSession')
+  @Directive('@authSession(role: ["admin"])')
   @Directive('@dbConn')
   async inactivateUser(
     @Args('user_id') userId: string,

@@ -1,18 +1,33 @@
+import { DefaultResponse } from '@/infra/dtos'
+import { MongoDbHelper } from '@/infra/helpers'
 import { LoggerService } from '@/infra/logger'
 import { SessionRepository } from '@/infra/repositories'
-import { Inject, InternalServerErrorException } from '@nestjs/common'
+import {
+  BadRequestException,
+  Inject,
+  InternalServerErrorException
+} from '@nestjs/common'
 import { Db } from 'mongodb'
 
 export class InactivateSessions {
   constructor(
     @Inject('logger') private readonly logger: LoggerService,
     @Inject('sessionRepository')
-    private readonly sessionRepository: SessionRepository
+    private readonly sessionRepository: SessionRepository,
+    @Inject('mongoDbHelper') private readonly mongoDbHelper: MongoDbHelper
   ) {}
 
-  async perform(dbConn: Db): Promise<any> {
+  async perform(userId: string, dbConn: Db): Promise<DefaultResponse> {
+    if (!this.mongoDbHelper.objectIdIsValid(userId))
+      throw new BadRequestException('User id not valid')
+
     try {
-      return {}
+      await this.sessionRepository.inactivateSessions(userId, dbConn)
+
+      return {
+        success: true,
+        message: `Sessions from user ${userId} are inactivated`
+      }
     } catch (err) {
       this.logger.error(
         'InactivateSessionsErr',
