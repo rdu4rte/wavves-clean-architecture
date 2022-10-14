@@ -9,6 +9,7 @@ const env = (name: string) => {
 export const config: Config = {
   port: +env('PORT') || 4000,
   isDev: env('NODE_ENV') === 'DEV',
+  isTest: env('NODE_ENV') === 'TEST',
   mongoDb: {
     host: env('MONGODB_HOST') || 'mongodb:27017',
     user: env('MONGODB_USER') || 'test',

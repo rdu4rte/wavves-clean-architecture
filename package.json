@@ -16,11 +16,12 @@
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "seed": "ts-node-transpile-only src/infra/seed/index.ts",
     "clear-jest-cache": "jest --clearCache",
-    "test": "NODE_ENV=TEST jest --verbose --detectOpenHandles --forceExit",
-    "test:watch": "NODE_ENV=TEST jest --watch --verbose --detectOpenHandles",
-    "test:cov": "NODE_ENV=TEST jest --detectOpenHandles --testTimeout=90000 -i --forceExit --coverage",
+    "test": "jest --verbose --detectOpenHandles --forceExit",
+    "test:watch": "jest --watch --verbose --detectOpenHandles",
+    "test:cov": "jest --detectOpenHandles --testTimeout=90000 -i --forceExit --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json"
+    "test:e2e": "jest --config ./test/jest-e2e.json",
+    "test:local": "NODE_ENV=TEST yarn seed && NODE_ENV=TEST yarn test:watch"
   },
   "dependencies": {
     "@nestjs/apollo": "^10.1.0",

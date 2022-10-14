@@ -1,6 +1,6 @@
 import { HttpServer, INestApplication } from '@nestjs/common'
 import { TestingModule } from '@nestjs/testing'
-import { getBooksCase } from './cases'
+import { getBooksCase } from './cases/books'
 import { buildTestServer, GqlCaller } from './config'
 
 describe('Book Module', () => {
