@@ -12,6 +12,7 @@ import { SessionRepository, UserRepository } from '@/infra/repositories'
 import {
   Inject,
   InternalServerErrorException,
+  NotFoundException,
   UnauthorizedException
 } from '@nestjs/common'
 import { Db, ObjectId } from 'mongodb'
@@ -37,6 +38,9 @@ export class Login {
       email,
       dbConn
     )
+    if (!user)
+      throw new NotFoundException('User not found or wrong credentials')
+
     const userId = user?._id
 
     const matchPassword = this.encrypter.decrypt(password, user?.password)

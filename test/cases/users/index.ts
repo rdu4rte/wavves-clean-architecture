@@ -1,6 +1,6 @@
 import { gql } from 'apollo-server-express'
 import { print } from 'graphql'
-import { USER_ID_ADMIN, USER_ID_USER } from '../../data'
+import { test } from '../../data'
 
 export const QueryGetAllUsers = print(gql`
   query GetAllUsers {
@@ -31,7 +31,7 @@ export const QueryGetAllUsers = print(gql`
 
 export const QueryGetUserById = print(gql`
 	query GetUserById {
-		user(user_id: "${USER_ID_ADMIN}") {
+		user(user_id: "${test.user.admin_id}") {
 			_id
 			active
 			created_at
@@ -46,7 +46,7 @@ export const QueryGetUserById = print(gql`
 
 export const QueryGetUserByIdErr = print(gql`
   query GetUserById {
-    user(user_id: "wrong_id") {
+    user(user_id: "${test.user.wrong_id}") {
       _id
       active
       created_at
@@ -63,10 +63,10 @@ export const MutationInsertUser = print(gql`
   mutation InsertUser {
     insertUser(
       input: {
-        email: "user_test@mail.com"
-        password: "123123"
+        email: "${test.random.email}"
+        password: "${test.random.password}"
         role: user
-        username: "user_test"
+        username: "${test.random.username}"
       }
     ) {
       message
@@ -78,8 +78,8 @@ export const MutationInsertUser = print(gql`
 export const MutationUpdatePassword = print(gql`
 	mutation UpdateUserPassword {
 		updateUserPassword(
-			password: "456456"
-			user_id: "${USER_ID_USER}"
+			password: "${test.random.password}"
+			user_id: "${test.user.user2_id}"
 		) {
 			message
 			success
@@ -89,7 +89,7 @@ export const MutationUpdatePassword = print(gql`
 
 export const MutationUpdatePasswordErr = print(gql`
   mutation UpdateUserPassword {
-    updateUserPassword(password: "456456", user_id: "wrong_id") {
+    updateUserPassword(password: "${test.random.password}", user_id: "${test.user.invalid_object_id}") {
       message
       success
     }
@@ -99,7 +99,7 @@ export const MutationUpdatePasswordErr = print(gql`
 export const MutationInactivateUser = print(gql`
 	mutation InactivateUser {
 		inactivateUser(
-			user_id: "${USER_ID_USER}"
+			user_id: "${test.user.user1_id}"
 		) {
 			message
 			success
@@ -109,7 +109,7 @@ export const MutationInactivateUser = print(gql`
 
 export const MutationInactivateUserErr = print(gql`
   mutation InactivateUser {
-    inactivateUser(user_id: "wrong_id") {
+    inactivateUser(user_id: "${test.user.invalid_object_id}") {
       message
       success
     }

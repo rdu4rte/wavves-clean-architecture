@@ -1,6 +1,6 @@
 import { gql } from 'apollo-server-express'
 import { print } from 'graphql'
-import { SESSION_ID, USER_ID_USER } from '../../data'
+import { test } from '../../data'
 
 export const QueryGetSessions = print(gql`
   query GetSessions {
@@ -32,7 +32,7 @@ export const QueryGetSessions = print(gql`
 
 export const QueryGetSessionById = print(gql`
   query GetSession {
-    session(session_id: "${SESSION_ID}") {
+    session(session_id: "${test.session.session_id_never_expires}") {
       session_id
       active
       created_at
@@ -49,7 +49,7 @@ export const QueryGetSessionById = print(gql`
 
 export const QueryGetSessionByIdErr = print(gql`
   query GetSession {
-    session(session_id: "wrong_session_id") {
+    session(session_id: "${test.session.wrong_session_id}") {
       session_id
       active
       created_at
@@ -66,7 +66,7 @@ export const QueryGetSessionByIdErr = print(gql`
 
 export const MutationInactivateUserSessions = print(gql`
   mutation InactivateUserSessions {
-    inactivateSessions(user_id: "${USER_ID_USER}") {
+    inactivateSessions(user_id: "${test.user.user1_id}") {
       message
       success
     }
@@ -75,7 +75,7 @@ export const MutationInactivateUserSessions = print(gql`
 
 export const MutationInactivateUserSessionsErr = print(gql`
   mutation InactivateUserSessions {
-    inactivateSessions(user_id: "wrong_user_id") {
+    inactivateSessions(user_id: "${test.user.invalid_object_id}") {
       message
       success
     }
@@ -84,7 +84,7 @@ export const MutationInactivateUserSessionsErr = print(gql`
 
 export const MutationLogin = print(gql`
   mutation Login {
-    login(credentials: { email: "admin@wavves.com", password: "123123" }) {
+    login(credentials: { email: "${test.email.user1_email}", password: "${test.password.user1_password}" }) {
       session_id
     }
   }
@@ -92,7 +92,7 @@ export const MutationLogin = print(gql`
 
 export const MutationLoginErr = print(gql`
   mutation Login {
-    login(credentials: { email: "admin@wavves.com", password: "456456" }) {
+    login(credentials: { email: "${test.random.email}", password: "${test.random.password}" }) {
       session_id
     }
   }

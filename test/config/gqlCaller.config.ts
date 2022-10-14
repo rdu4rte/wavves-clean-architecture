@@ -1,12 +1,19 @@
 import { HttpServer } from '@nestjs/common'
 import * as request from 'supertest'
-import { SESSION_ID } from '../data'
+import { test } from '../data'
 
 export class GqlCaller {
-  async call(server: HttpServer, query: string): Promise<any> {
+  async call(
+    server: HttpServer,
+    query: string,
+    session_id?: string
+  ): Promise<any> {
     const res = await request(server)
       .post('/graphql')
-      .set('Authorization', `Bearer ${SESSION_ID}`)
+      .set(
+        'Authorization',
+        `Bearer ${session_id || test.session.session_id_never_expires}`
+      )
       .send({ query })
 
     return JSON.parse(res.text)
