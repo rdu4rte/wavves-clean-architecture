@@ -3,10 +3,12 @@ vars:
   LOCAL_SERVICES: "app mongodb"
   COMPOSE_FILE: "COMPOSE_FILE=docker-compose.yml"
   BUILD_CMD: "docker-compose build --no-cache"
+  BUILD_CMD_LOCAL: "docker-compose up -d mongodb"
   RUN_CMD: "docker-compose up -d {{.LOCAL_SERVICES}}"
   RUN_APP_CMD: "docker-compose up -d app"
   STOP_CMD: "docker-compose down -v"
   TEST_CMD: "docker-compose exec -T app yarn test"
+  TEST_CMD_LOCAL: "NODE_ENV=TEST yarn test:local"
   TEST_COVERAGE_CMD: "docker-compose exec -T app yarn test:cov"
   COPY_COVERAGE_CMD: "docker-compose cp app:/app/coverage ."
   BASH_CMD: "docker exec -it app-$PROJECT_NAME bash"
@@ -54,6 +56,13 @@ tasks:
       - task: stop
       - task: run
       - '{{.TEST_CMD}}'
+
+  test:local:
+    desc: Execute tests locally
+    cmds:
+      - task: stop
+      - '{{.BUILD_CMD_LOCAL}}'
+      - '{{.TEST_CMD_LOCAL}}'
 
   test:ci:
     desc: Execute tests for CI

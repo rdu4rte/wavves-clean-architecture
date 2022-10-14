@@ -28,7 +28,7 @@ export class authSessionDirective extends SchemaDirectiveVisitor {
         )
 
       const session: SessionDto = await checkSessionIntegrity.perform(
-        sessionId,
+        sessionId.split(' ')[1],
         dbConn
       )
 
