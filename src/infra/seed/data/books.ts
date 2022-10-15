@@ -11,7 +11,9 @@ export const books: BookDto[] = [
     publisher: 'Publisher1',
     category: Category.outros,
     publicationDate: '30-09-2022',
-    created_at: new Date()
+    created_at: new Date(),
+    updated_at: new Date(),
+    active: true
   },
   {
     _id: new ObjectId('6336e77ee63acaedffa1c216'),
@@ -22,6 +24,8 @@ export const books: BookDto[] = [
     publisher: 'Publisher2',
     category: Category.biografias,
     publicationDate: '12-09-2022',
-    created_at: new Date()
+    created_at: new Date(),
+    updated_at: new Date(),
+    active: true
   }
 ]
