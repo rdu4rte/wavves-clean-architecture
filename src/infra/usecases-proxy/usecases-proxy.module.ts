@@ -58,10 +58,16 @@ export class UsecasesProxyModule {
       module: UsecasesProxyModule,
       providers: [
         {
-          inject: [LoggerService, BookRepository],
+          inject: [LoggerService, BookRepository, MongoDbHelper],
           provide: UsecasesProxyModule.GET_BOOKS,
-          useFactory: (logger: LoggerService, bookRepository: BookRepository) =>
-            new UseCaseProxy(new GetBooks(logger, bookRepository))
+          useFactory: (
+            logger: LoggerService,
+            bookRepository: BookRepository,
+            mongodbHelper: MongoDbHelper
+          ) =>
+            new UseCaseProxy(
+              new GetBooks(logger, bookRepository, mongodbHelper)
+            )
         },
         {
           inject: [LoggerService, UserRepository, MongoDbHelper],

@@ -2,8 +2,14 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type BookDataOutput {
+  count: Int!
+  data: [BookDto!]!
+}
+
 type BookDto {
   _id: ObjectId!
+  active: Boolean!
   author: String!
   category: Category!
   created_at: DateTime!
@@ -12,6 +18,15 @@ type BookDto {
   publicationDate: String!
   publisher: String!
   unitValue: Float!
+  updated_at: DateTime!
+}
+
+input BookFilters {
+  active: Boolean
+  author: String
+  category: Category
+  publicationDate: String
+  publisher: String
 }
 
 """Book category type definition"""
@@ -71,7 +86,7 @@ input PaginationParams {
 }
 
 type Query {
-  books: [BookDto!]!
+  books(filters: BookFilters!, pagination: PaginationParams!): BookDataOutput!
   session(session_id: String!): SessionDto!
   sessions(pagination: PaginationParams!): SessionsDataOutput!
   user(user_id: String!): UserDto!
