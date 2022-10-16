@@ -4,7 +4,7 @@ import { BookRepository } from '@/infra/repositories'
 import { Inject, InternalServerErrorException } from '@nestjs/common'
 import { Db } from 'mongodb'
 
-export class UpdateBook {
+export class DeleteBook {
   constructor(
     @Inject('logger') private readonly logger: LoggerService,
     @Inject('bookRepository') private readonly bookRepository: BookRepository
