@@ -91,4 +91,13 @@ export class UserResolver {
   ): Promise<DefaultResponse> {
     return this.inactivateUserProxy.getInstance().perform(userId, dbConn)
   }
+
+  @Query(() => UserDto)
+  @Directive('@authSession')
+  @Directive('@dbConn')
+  async userBySession(
+    @Context() { dbConn, userId }: HttpCtx
+  ): Promise<UserDto> {
+    return this.getUserByIdProxy.getInstance().perform(userId, dbConn)
+  }
 }

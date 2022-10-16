@@ -90,6 +90,7 @@ type Query {
   session(session_id: String!): SessionDto!
   sessions(pagination: PaginationParams!): SessionsDataOutput!
   user(user_id: String!): UserDto!
+  userBySession: UserDto!
   users(filters: UserFiltersInput!, pagination: PaginationParams!): UserDataOutput!
 }
 

@@ -8,4 +8,5 @@ export interface HttpCtx {
     authorization?: string
   }
   dbConn?: Db
+  userId?: string
 }
