@@ -1,4 +1,10 @@
-import { GetBooks } from '@/usecases/books'
+import {
+  DeleteBook,
+  GetBook,
+  GetBooks,
+  InsertBook,
+  UpdateBook
+} from '@/usecases/books'
 import {
   Login,
   GetSession,
@@ -41,6 +47,10 @@ import { UseCaseProxy } from './usecases-proxy'
 })
 export class UsecasesProxyModule {
   static GET_BOOKS = 'GetBooks'
+  static DELETE_BOOK = 'DeleteBook'
+  static GET_BOOK_BY_ID = 'GetBook'
+  static INSERT_BOOK = 'InsertBook'
+  static UPDATE_BOOK = 'UpdateBook'
 
   static GET_USERS = 'GetUsers'
   static GET_USER_BY_ID = 'GetUserById'
@@ -68,6 +78,30 @@ export class UsecasesProxyModule {
             new UseCaseProxy(
               new GetBooks(logger, bookRepository, mongodbHelper)
             )
+        },
+        {
+          inject: [LoggerService, BookRepository],
+          provide: UsecasesProxyModule.DELETE_BOOK,
+          useFactory: (logger: LoggerService, bookRepository: BookRepository) =>
+            new UseCaseProxy(new DeleteBook(logger, bookRepository))
+        },
+        {
+          inject: [LoggerService, BookRepository],
+          provide: UsecasesProxyModule.GET_BOOK_BY_ID,
+          useFactory: (logger: LoggerService, bookRepository: BookRepository) =>
+            new UseCaseProxy(new GetBook(logger, bookRepository))
+        },
+        {
+          inject: [LoggerService, BookRepository],
+          provide: UsecasesProxyModule.INSERT_BOOK,
+          useFactory: (logger: LoggerService, bookRepository: BookRepository) =>
+            new UseCaseProxy(new InsertBook(logger, bookRepository))
+        },
+        {
+          inject: [LoggerService, BookRepository],
+          provide: UsecasesProxyModule.UPDATE_BOOK,
+          useFactory: (logger: LoggerService, bookRepository: BookRepository) =>
+            new UseCaseProxy(new UpdateBook(logger, bookRepository))
         },
         {
           inject: [LoggerService, UserRepository, MongoDbHelper],
@@ -208,7 +242,11 @@ export class UsecasesProxyModule {
         UsecasesProxyModule.LOGIN_USER,
         UsecasesProxyModule.GET_SESSION,
         UsecasesProxyModule.GET_SESSIONS_LIST,
-        UsecasesProxyModule.INACTIVATE_SESSIONS
+        UsecasesProxyModule.INACTIVATE_SESSIONS,
+        UsecasesProxyModule.DELETE_BOOK,
+        UsecasesProxyModule.GET_BOOK_BY_ID,
+        UsecasesProxyModule.INSERT_BOOK,
+        UsecasesProxyModule.UPDATE_BOOK
       ]
     }
   }

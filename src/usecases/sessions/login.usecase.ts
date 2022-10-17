@@ -65,7 +65,7 @@ export class Login {
 
       this.logger.log(
         'Login',
-        `Inactivate past sessions - res: ${inactivate.result.ok ? 'ok' : 'nok'}`
+        `User logged in - res: ${inactivate.result.ok ? 'ok' : 'nok'}`
       )
 
       return {

@@ -32,6 +32,8 @@ export class authSessionDirective extends SchemaDirectiveVisitor {
         dbConn
       )
 
+      args[2].userId = session?.user?._id // context
+
       if (roles && !roles.includes(session?.user?.role))
         throw new UnauthorizedException('Role not authorized')
 

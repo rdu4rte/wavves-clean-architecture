@@ -29,6 +29,27 @@ input BookFilters {
   publisher: String
 }
 
+input BookInput {
+  author: String!
+  category: Category!
+  name: String!
+  pages: Int!
+  publicationDate: String!
+  publisher: String!
+  unitValue: Float!
+}
+
+input BookUpdate {
+  active: Boolean
+  author: String
+  category: Category
+  name: String
+  pages: Int
+  publicationDate: String
+  publisher: String
+  unitValue: Float
+}
+
 """Book category type definition"""
 enum Category {
   biografias
@@ -67,10 +88,13 @@ type DefaultResponse {
 }
 
 type Mutation {
+  deleteBook(book_id: String!): DefaultResponse!
   inactivateSessions(user_id: String!): DefaultResponse!
   inactivateUser(user_id: String!): DefaultResponse!
+  insertBook(input: BookInput!): DefaultResponse!
   insertUser(input: UserInput!): DefaultResponse!
   login(credentials: CredentialsDto!): SessionResponse!
+  updateBook(book_id: String!, update: BookUpdate!): DefaultResponse!
   updateUserPassword(password: String!, user_id: String!): DefaultResponse!
 }
 
@@ -86,10 +110,12 @@ input PaginationParams {
 }
 
 type Query {
+  bookById(book_id: String!): BookDto!
   books(filters: BookFilters!, pagination: PaginationParams!): BookDataOutput!
   session(session_id: String!): SessionDto!
   sessions(pagination: PaginationParams!): SessionsDataOutput!
   user(user_id: String!): UserDto!
+  userBySession: UserDto!
   users(filters: UserFiltersInput!, pagination: PaginationParams!): UserDataOutput!
 }
 
