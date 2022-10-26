@@ -9,6 +9,8 @@ import {
 import { ObjectIdScalar } from '../config/graphql/scalars'
 import { ObjectId } from 'mongodb'
 import { IsBoolean, IsEnum, IsOptional, IsString } from 'class-validator'
+import * as GraphQLUpload from 'graphql-upload/GraphQLUpload.js'
+import { IFileUpload } from '@/domain/usecases'
 
 export enum Category {
   biografias = 'biografias',
@@ -35,6 +37,27 @@ registerEnumType(Category, {
   name: 'Category',
   description: 'Book category type definition'
 })
+
+@ObjectType()
+export class ImageProps {
+  @Field(() => String, { nullable: true })
+  id?: string
+
+  @Field(() => String, { nullable: true })
+  title?: string
+
+  @Field(() => String, { nullable: true })
+  description?: string
+
+  @Field(() => String, { nullable: true })
+  type?: string
+
+  @Field(() => String, { nullable: true })
+  deletehash?: string
+
+  @Field(() => String, { nullable: true })
+  link?: string
+}
 
 @ObjectType()
 export class BookDto {
@@ -74,6 +97,9 @@ export class BookDto {
 
   @Field(() => Boolean)
   active: boolean
+
+  @Field(() => ImageProps, { nullable: true })
+  avatar?: ImageProps
 }
 
 @ObjectType()
@@ -162,4 +188,13 @@ export class BookUpdate {
 
   @Field(() => Boolean, { nullable: true })
   active?: boolean
+}
+
+@InputType()
+export class BookAvatarInput {
+  @Field(() => ObjectIdScalar)
+  bookId: ObjectId
+
+  @Field(() => GraphQLUpload)
+  file: Promise<IFileUpload>
 }

@@ -13,4 +13,16 @@ export interface Config {
     sessionTtl: number
     salt: number
   }
+  imgur: {
+    clientId: string
+    clientSecret: string
+    clientName: string
+    clientAlbum: string
+    albumProps?: {
+      id: string
+      deletehash: string
+      title: string
+      description: string
+    }
+  }
 }
