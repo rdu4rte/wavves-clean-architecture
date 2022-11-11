@@ -1,5 +1,6 @@
 import { HttpCtx } from '@/domain/graphql'
 import {
+  AvatarUpload,
   DeleteBook,
   GetBook,
   GetBooks,
@@ -16,6 +17,7 @@ import {
   Resolver
 } from '@nestjs/graphql'
 import {
+  BookAvatarInput,
   BookDataOutput,
   BookDto,
   BookFilters,
@@ -38,7 +40,9 @@ export class BookResolver {
     @Inject(UsecasesProxyModule.UPDATE_BOOK)
     private readonly updateBookProxy: UseCaseProxy<UpdateBook>,
     @Inject(UsecasesProxyModule.DELETE_BOOK)
-    private readonly deleteBookProxy: UseCaseProxy<DeleteBook>
+    private readonly deleteBookProxy: UseCaseProxy<DeleteBook>,
+    @Inject(UsecasesProxyModule.UPLOAD_BOOK_AVATAR)
+    private readonly avatarUploadProxy: UseCaseProxy<AvatarUpload>
   ) {}
 
   @Query(() => BookDataOutput)
@@ -91,5 +95,15 @@ export class BookResolver {
     @Context() { dbConn }: HttpCtx
   ): Promise<DefaultResponse> {
     return this.deleteBookProxy.getInstance().perform(bookId, dbConn)
+  }
+
+  @Mutation(() => DefaultResponse)
+  @Directive('@authSession')
+  @Directive('@dbConn')
+  async uploadAvatar(
+    @Args('uploadInput') uploadInput: BookAvatarInput,
+    @Context() { dbConn }: HttpCtx
+  ): Promise<DefaultResponse> {
+    return this.avatarUploadProxy.getInstance().perform(uploadInput, dbConn)
   }
 }

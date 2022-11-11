@@ -1,4 +1,5 @@
 import {
+  AvatarUpload,
   DeleteBook,
   GetBook,
   GetBooks,
@@ -26,6 +27,7 @@ import {
   UuidHelper
 } from '../helpers'
 import { LoggerService } from '../logger'
+import { FsProvider, ImgurProvider } from '../providers'
 import {
   BookRepository,
   SessionRepository,
@@ -42,7 +44,9 @@ import { UseCaseProxy } from './usecases-proxy'
     UuidHelper,
     BookRepository,
     UserRepository,
-    SessionRepository
+    SessionRepository,
+    FsProvider,
+    ImgurProvider
   ]
 })
 export class UsecasesProxyModule {
@@ -51,6 +55,7 @@ export class UsecasesProxyModule {
   static GET_BOOK_BY_ID = 'GetBook'
   static INSERT_BOOK = 'InsertBook'
   static UPDATE_BOOK = 'UpdateBook'
+  static UPLOAD_BOOK_AVATAR = 'AvatarUpload'
 
   static GET_USERS = 'GetUsers'
   static GET_USER_BY_ID = 'GetUserById'
@@ -230,6 +235,24 @@ export class UsecasesProxyModule {
             new UseCaseProxy(
               new InactivateSessions(logger, sessionRepository, mongoDbHelper)
             )
+        },
+        {
+          inject: [LoggerService, BookRepository, FsProvider, ImgurProvider],
+          provide: UsecasesProxyModule.UPLOAD_BOOK_AVATAR,
+          useFactory: (
+            logger: LoggerService,
+            bookRepository: BookRepository,
+            fsProvider: FsProvider,
+            imgurProvider: ImgurProvider
+          ) =>
+            new UseCaseProxy(
+              new AvatarUpload(
+                logger,
+                bookRepository,
+                fsProvider,
+                imgurProvider
+              )
+            )
         }
       ],
       exports: [
@@ -246,7 +269,8 @@ export class UsecasesProxyModule {
         UsecasesProxyModule.DELETE_BOOK,
         UsecasesProxyModule.GET_BOOK_BY_ID,
         UsecasesProxyModule.INSERT_BOOK,
-        UsecasesProxyModule.UPDATE_BOOK
+        UsecasesProxyModule.UPDATE_BOOK,
+        UsecasesProxyModule.UPLOAD_BOOK_AVATAR
       ]
     }
   }

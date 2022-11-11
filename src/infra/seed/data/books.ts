@@ -1,5 +1,6 @@
 import { BookDto, Category } from '../../../infra/dtos'
 import { ObjectId } from 'mongodb'
+import { faker } from '@faker-js/faker'
 
 export const books: BookDto[] = [
   {
@@ -29,3 +30,56 @@ export const books: BookDto[] = [
     active: true
   }
 ]
+
+const mapCategories = [
+  'biografias',
+  'folclore',
+  'literatura_brasileira',
+  'colecoes',
+  'genealogia',
+  'literatura_estrangeira',
+  'comportamento',
+  'humor',
+  'livros_raros',
+  'contos',
+  'infanto_juvenis',
+  'manuscritos',
+  'critica_literaria',
+  'jogos',
+  'poesia',
+  'ficcao_cientifica',
+  'jornais',
+  'outros'
+]
+
+function seedBooks() {
+  for (let i = 0; i < 100; i += 1) {
+    books.push({
+      _id: new ObjectId(),
+      name: faker.random.words(),
+      author: `${faker.name.firstName()} ${faker.name.lastName()}`,
+      pages: faker.datatype.number({
+        min: 50,
+        max: 600
+      }),
+      unitValue: +faker.commerce.price(100),
+      publisher: faker.company.name(),
+      category:
+        Category[
+          mapCategories[Math.floor(Math.random() * mapCategories.length)]
+        ],
+      publicationDate: `${faker.datatype.number({
+        min: 1,
+        max: 30
+      })}-${faker.datatype.number({
+        min: 1,
+        max: 12
+      })}-2022`,
+      created_at: new Date(),
+      updated_at: new Date(),
+      active: faker.datatype.boolean()
+    })
+  }
+}
+
+seedBooks()

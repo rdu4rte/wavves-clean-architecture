@@ -16,6 +16,7 @@ import { UsecasesProxyModule } from './infra/usecases-proxy'
       debug: false,
       playground: true,
       sortSchema: true,
+      uploads: false,
       autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
       resolvers: { ObjectId: ObjectIdScalar },
       schemaDirectives: {

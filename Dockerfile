@@ -1,10 +1,26 @@
-FROM node:16.17.1
+FROM node:16.8-alpine3.11 as builder
 
-WORKDIR /app
-COPY . .
+ENV NODE_ENV build
 
-RUN yarn cache clean --force && \
-    yarn install --ignore-scripts && \
-    yarn build
+WORKDIR /home/node
 
-CMD ["yarn", "start:prod"]
+COPY . /home/node
+
+RUN yarn ci \
+    && yarn build \
+    && yarn prune --production
+
+# ---
+
+FROM node:16.8-alpine3.11
+
+ENV NODE_ENV production
+
+USER node
+WORKDIR /home/node
+
+COPY --from=builder /home/node/package*.json /home/node/
+COPY --from=builder /home/node/node_modules/ /home/node/node_modules/
+COPY --from=builder /home/node/dist/ /home/node/dist/
+
+CMD ["node", "dist/main.js"]

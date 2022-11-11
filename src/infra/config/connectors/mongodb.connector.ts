@@ -1,4 +1,5 @@
 import { Db, MongoClient } from 'mongodb'
+import { config } from '../environment'
 
 export const MongoConnection = {
   client: null as MongoClient,
@@ -18,15 +19,23 @@ export const MongoConnection = {
     this.client = null
   },
 
+  getUri(host: string, user: string, password: string): string {
+    const uri = config.isProd
+      ? `mongodb+srv://${config.mongoDb.user}:${config.mongoDb.password}@${config.mongoDb.host}/?retryWrites=true&w=majority`
+      : `mongodb://${user}:${password}@${host}/admin?maxIdleTimeMS=120000`
+
+    return uri
+  },
+
   async getConnection(
     host: string,
     user: string,
     password: string,
     db?: string
   ): Promise<Db> {
-    const uri = `mongodb://${user}:${password}@${host}/admin?maxIdleTimeMS=120000`
+    this.uri = this.getUri(host, user, password)
 
-    this.uri = uri
+    console.log(this.uri)
     if (!this.client?.isConnected()) await this.connect(this.uri)
     return db ? this.client.db(db) : this.client
   }

@@ -2,6 +2,7 @@ export interface Config {
   port: number
   isDev: boolean
   isTest: boolean
+  isProd: boolean
   mongoDb: {
     host: string
     user: string
@@ -12,5 +13,17 @@ export interface Config {
     secret: string
     sessionTtl: number
     salt: number
+  }
+  imgur: {
+    clientId: string
+    clientSecret: string
+    clientName: string
+    clientAlbum: string
+    albumProps?: {
+      id: string
+      deletehash: string
+      title: string
+      description: string
+    }
   }
 }
