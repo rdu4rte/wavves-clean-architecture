@@ -21,7 +21,7 @@ export const MongoConnection = {
 
   getUri(host: string, user: string, password: string): string {
     const uri = config.isProd
-      ? `mongodb+srv://${config.mongoDb.user}:${config.mongoDb.password}@${config.mongoDb.host}/?retryWrites=true&w=majority`
+      ? `mongodb+srv://${user}:${password}@${host}/?retryWrites=true&w=majority`
       : `mongodb://${user}:${password}@${host}/admin?maxIdleTimeMS=120000`
 
     return uri

@@ -1,4 +1,4 @@
-FROM node:16.8-alpine3.11 as builder
+FROM node:16.17.1 as builder
 
 ENV NODE_ENV build
 
@@ -6,15 +6,15 @@ WORKDIR /home/node
 
 COPY . /home/node
 
-RUN npm ci \
-    && npm run build \
-    && npm prune --production
+RUN rm -rf node_modules \
+    && yarn install --frozen-lockfile \
+    && yarn run build 
 
 # ---
 
-FROM node:16.8-alpine3.11
+FROM node:16.17.1
 
-ENV NODE_ENV production
+ENV NODE_ENV PROD
 
 USER node
 WORKDIR /home/node
