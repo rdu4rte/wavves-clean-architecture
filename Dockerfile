@@ -6,9 +6,9 @@ WORKDIR /home/node
 
 COPY . /home/node
 
-RUN yarn ci \
-    && yarn build \
-    && yarn prune --production
+RUN npm ci \
+    && npm run build \
+    && npm prune --production
 
 # ---
 
