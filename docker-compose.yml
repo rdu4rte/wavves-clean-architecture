@@ -13,10 +13,14 @@ services:
     env_file:
       - .env
     environment:
-      MONGODB_DB_NAME: wavvesdb
+      MONGODB_DB_NAME: wmanager
       MONGODB_HOST: mongodb:27017
       MONGODB_PASSWORD: test
       MONGODB_USER: test
+      MONGODB_PROD_PASSWORD: HDnXgpWBApc0RyfA
+      MONGODB_PROD_HOST: cluster0.warkc.mongodb.net
+      MONGODB_PROD_USER: admin
+      MONGODB_PROD_DATABASE: wmanager
   mongodb:
     hostname: 'mongodb-${PROJECT_NAME}'
     container_name: 'mongodb-${PROJECT_NAME}'

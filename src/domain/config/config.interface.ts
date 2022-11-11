@@ -2,6 +2,7 @@ export interface Config {
   port: number
   isDev: boolean
   isTest: boolean
+  isProd: boolean
   mongoDb: {
     host: string
     user: string

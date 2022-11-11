@@ -10,11 +10,12 @@ export const config: Config = {
   port: +env('PORT') || 4000,
   isDev: env('NODE_ENV') === 'DEV',
   isTest: env('NODE_ENV') === 'TEST',
+  isProd: env('NODE_ENV') === 'PROD',
   mongoDb: {
     host: env('MONGODB_HOST') || 'mongodb:27017',
     user: env('MONGODB_USER') || 'test',
     password: env('MONGODB_PASSWORD') || 'test',
-    database: env('MONGODB_DATABASE') || 'wavvesdb'
+    database: env('MONGODB_DATABASE') || 'wmanager'
   },
   jwt: {
     secret: env('JWT_SECRET') || 's3cr3t',
