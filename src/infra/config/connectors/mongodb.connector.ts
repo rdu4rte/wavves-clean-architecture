@@ -34,8 +34,6 @@ export const MongoConnection = {
     db?: string
   ): Promise<Db> {
     this.uri = this.getUri(host, user, password)
-
-    console.log(this.uri)
     if (!this.client?.isConnected()) await this.connect(this.uri)
     return db ? this.client.db(db) : this.client
   }

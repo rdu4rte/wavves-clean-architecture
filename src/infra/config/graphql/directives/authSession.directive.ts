@@ -17,7 +17,8 @@ export class authSessionDirective extends SchemaDirectiveVisitor {
       )
 
       const sessionId =
-        args[2].req.headers['authorization'] || args[2].headers['authorization']
+        args[2].req.headers?.['authorization'] ||
+        args[2].headers?.['authorization']
 
       const roles: Role[] = thisArgs?.roles
       const dbConn: Db = args[2].dbConn
